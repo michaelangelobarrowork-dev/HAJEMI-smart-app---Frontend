@@ -1,0 +1,48 @@
+name: hajemi
+description: HAJEMI Smart Device Management App
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.3.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # HTTP
+  dio: ^5.4.3
+
+  # State management
+  flutter_riverpod: ^2.5.1
+
+  # Secure token storage
+  flutter_secure_storage: ^9.2.2
+
+  # Navigation
+  go_router: ^14.2.7
+
+  # Fonts
+  google_fonts: ^6.2.1
+
+  # PIN / OTP input
+  pinput: ^6.0.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^4.0.0
+  flutter_launcher_icons: ^0.13.1
+
+flutter_launcher_icons:
+  android: true
+  ios: false
+  image_path: "assets/images/logo.png"
+  min_sdk_android: 21
+  adaptive_icon_background: "#0D2E4A"
+  adaptive_icon_foreground: "assets/images/logo.png"
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/images/
