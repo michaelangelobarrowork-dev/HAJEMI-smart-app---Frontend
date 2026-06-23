@@ -21,6 +21,7 @@ class ApiConstants {
   static const updateUsername = '/users/me/username';
   static const updateEmail    = '/users/me/email';
   static const updatePassword = '/users/me/password';
+  static const registerFcmToken = '/users/me/fcm-token';
 
   // Household
   static const household       = '/household';

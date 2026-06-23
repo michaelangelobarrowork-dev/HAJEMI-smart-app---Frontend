@@ -6,6 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../core/api_error.dart';
 import '../../core/theme.dart';
 import '../../services/auth_service.dart';
+import '../../services/notification_service.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
@@ -40,6 +41,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         password:   _passwordCtrl.text,
         rememberMe: _remember,
       );
+
+      // Register FCM token after successful login
+      await ref.read(notificationServiceProvider).registerToken();
+
       if (mounted) context.go('/dashboard');
     } on DioException catch (e) {
       setState(() => _error = formatApiErrorMessage(e));

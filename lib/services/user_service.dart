@@ -34,6 +34,10 @@ class UserService {
     });
   }
 
+  Future<void> registerFcmToken(String token) async {
+    await _dio.post(ApiConstants.registerFcmToken, data: {'fcm_token': token});
+  }
+
   Future<HouseholdModel> getHousehold(int id) async {
     final res = await _dio.get('${ApiConstants.household}/$id');
     final householdMap = res.data as Map<String, dynamic>;
