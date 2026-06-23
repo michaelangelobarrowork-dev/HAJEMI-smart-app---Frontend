@@ -2,7 +2,7 @@ class ApiConstants {
   ApiConstants._();
 
   // Backend base URL – local network IP
-  static const baseUrl = 'https://ultra-pond-cardinal.ngrok-free.dev/';
+  static const baseUrl = 'https://192.168.1.38:8000';
 
   // Auth
   static const register  = '/auth/register';

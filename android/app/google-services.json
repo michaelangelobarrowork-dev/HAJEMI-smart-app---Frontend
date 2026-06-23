@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "263071615874",
+    "project_id": "iot-smart-home-98b55",
+    "storage_bucket": "iot-smart-home-98b55.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:263071615874:android:ac1c47494ccc86ad731d9b",
+        "android_client_info": {
+          "package_name": "com.hajemi.smart"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDYC_FtzHqC8Pid2Tct4-3IRFwoT0mmgqE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
