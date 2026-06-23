@@ -4,7 +4,10 @@ import '../screens/auth/login_screen.dart';
 import '../screens/auth/register_screen.dart';
 import '../screens/auth/verify_otp_screen.dart';
 import '../screens/dashboard/dashboard_screen.dart';
+import '../screens/dashboard/household_management_screen.dart';
 import '../screens/dashboard/notification_center_screen.dart';
+import '../screens/dashboard/register_device_screen.dart';
+import '../screens/dashboard/night_light_control_screen.dart';
 import '../services/auth_service.dart';
 
 final routerProvider = Provider<GoRouter>((ref) {
@@ -43,6 +46,21 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/notifications',
         builder: (_, __) => const NotificationCenterScreen(),
+      ),
+      GoRoute(
+        path: '/register-device',
+        builder: (_, __) => const RegisterDeviceScreen(),
+      ),
+      GoRoute(
+        path: '/household-management',
+        builder: (_, __) => const HouseholdManagementScreen(),
+      ),
+      GoRoute(
+        path: '/device-control/:id',
+        builder: (_, state) {
+          final id = int.parse(state.pathParameters['id']!);
+          return NightLightControlScreen(deviceId: id);
+        },
       ),
     ],
   );

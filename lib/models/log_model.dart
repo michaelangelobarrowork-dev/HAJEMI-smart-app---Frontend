@@ -1,44 +1,56 @@
 class LogModel {
-  final int id;
+  final String id;
+  final String deviceId;
+  final String? deviceName;
+  final String? performedBy;
+  final String? performerUsername;
   final String actionType;
-  final String message;
-  final int? deviceId;
-  final DateTime? createdAt;
-  final String? details;
+  final int? ledNumber;
+  final String? ledLabel;
+  final String triggeredBy;
+  final DateTime createdAt;
 
   const LogModel({
     required this.id,
+    required this.deviceId,
+    this.deviceName,
+    this.performedBy,
+    this.performerUsername,
     required this.actionType,
-    required this.message,
-    this.deviceId,
-    this.createdAt,
-    this.details,
+    this.ledNumber,
+    this.ledLabel,
+    required this.triggeredBy,
+    required this.createdAt,
   });
 
   factory LogModel.fromJson(Map<String, dynamic> json) {
-    final actionType = (json['action_type'] ?? json['type'] ?? json['event'] ?? 'activity')
-        .toString();
-
-    final message = (json['message'] ??
-            json['details'] ??
-            json['description'] ??
-            json['action'] ??
-            'Activity log')
-        .toString();
-
     return LogModel(
-      id: int.tryParse(json['id']?.toString() ?? '') ?? 0,
-      actionType: actionType,
-      message: message,
-      deviceId: json['device_id'] == null
-          ? null
-          : int.tryParse(json['device_id'].toString()),
+      id: json['id']?.toString() ?? '',
+      deviceId: json['device_id']?.toString() ?? '',
+      deviceName: json['device_name']?.toString(),
+      performedBy: json['performed_by']?.toString(),
+      performerUsername: json['performer_username']?.toString(),
+      actionType: json['action_type']?.toString() ?? 'activity',
+      ledNumber: json['led_number'] is int ? json['led_number'] as int : null,
+      ledLabel: json['led_label']?.toString(),
+      triggeredBy: json['triggered_by']?.toString() ?? 'Unknown',
       createdAt: json['created_at'] != null
-          ? DateTime.tryParse(json['created_at'].toString())
-          : (json['timestamp'] != null
-              ? DateTime.tryParse(json['timestamp'].toString())
-              : null),
-      details: json['details']?.toString(),
+          ? DateTime.parse(json['created_at'].toString())
+          : DateTime.now(),
     );
+  }
+
+  String get message {
+    if (actionType == 'toggle_led') {
+      return 'Toggled LED ${ledLabel ?? ledNumber ?? ''}';
+    }
+    if (actionType == 'toggle_auto_mode') {
+      return 'Auto Mode toggled';
+    }
+    return actionType.replaceAll('_', ' ').toUpperCase();
+  }
+
+  String get performerDisplay {
+    return performerUsername ?? performedBy ?? triggeredBy;
   }
 }

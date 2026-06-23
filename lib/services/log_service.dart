@@ -13,8 +13,19 @@ class LogService {
 
   LogService({required Dio dio}) : _dio = dio;
 
-  Future<List<LogModel>> getLogs() async {
-    final res = await _dio.get(ApiConstants.logs);
+  Future<List<LogModel>> getLogs({
+    String? deviceId,
+    String? from,
+    String? to,
+    String? actionType,
+  }) async {
+    final Map<String, dynamic> queryParams = {};
+    if (deviceId != null && deviceId != 'all') queryParams['device_id'] = deviceId;
+    if (from != null) queryParams['from'] = from;
+    if (to != null) queryParams['to'] = to;
+    if (actionType != null && actionType != 'all') queryParams['action_type'] = actionType;
+
+    final res = await _dio.get(ApiConstants.logs, queryParameters: queryParams);
     final data = res.data;
 
     if (data is List) {

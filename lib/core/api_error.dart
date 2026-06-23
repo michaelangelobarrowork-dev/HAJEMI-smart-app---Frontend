@@ -22,7 +22,8 @@ String formatApiErrorMessage(
         error.type == DioExceptionType.connectionTimeout ||
         error.type == DioExceptionType.receiveTimeout ||
         error.type == DioExceptionType.sendTimeout) {
-      return 'Please check your internet connection and try again.';
+      final details = _extractDioErrorDetails(error);
+      return 'Unable to reach the server (${error.type.name}). $details';
     }
 
     final statusCode = error.response?.statusCode;
@@ -38,4 +39,18 @@ String formatApiErrorMessage(
   }
 
   return fallback;
+}
+
+String _extractDioErrorDetails(DioException error) {
+  final message = error.message?.trim();
+  if (message != null && message.isNotEmpty) {
+    return message;
+  }
+
+  final underlying = error.error;
+  if (underlying != null) {
+    return underlying.toString();
+  }
+
+  return 'Please check your connection and try again.';
 }

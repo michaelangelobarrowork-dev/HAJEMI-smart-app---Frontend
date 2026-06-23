@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -19,6 +21,7 @@ final dioProvider = Provider<Dio>((ref) {
 
   dio.interceptors.add(InterceptorsWrapper(
     onRequest: (options, handler) async {
+      log('Dio request: ${options.method} ${options.uri}');
       final token = await storage.read(key: StorageKeys.accessToken);
       if (token != null) {
         options.headers['Authorization'] = 'Bearer $token';
@@ -26,6 +29,9 @@ final dioProvider = Provider<Dio>((ref) {
       handler.next(options);
     },
     onError: (error, handler) async {
+      log('Dio error: ${error.requestOptions.method} ${error.requestOptions.uri} '
+          'type=${error.type} status=${error.response?.statusCode} '
+          'message=${error.message} error=${error.error}');
       if (error.response?.statusCode == 401) {
         try {
           final refreshToken =

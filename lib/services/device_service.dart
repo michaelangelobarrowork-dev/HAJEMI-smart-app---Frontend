@@ -22,6 +22,12 @@ class DeviceService {
         .toList();
   }
 
+  /// Fetch a single device by ID.
+  Future<DeviceModel> getDevice(int deviceId) async {
+    final res = await _dio.get('${ApiConstants.devices}/$deviceId');
+    return DeviceModel.fromJson(res.data as Map<String, dynamic>);
+  }
+
   /// Register a new device via product key + name.
   Future<void> registerDevice({
     required String productKey,
@@ -68,6 +74,18 @@ class DeviceService {
     await _dio.patch(
       '${ApiConstants.devices}/$deviceId/night-light/leds/$ledNumber',
       data: {'state': state},
+    );
+  }
+
+  /// Update LED label.
+  Future<void> updateLedLabel({
+    required int deviceId,
+    required int ledNumber,
+    required String label,
+  }) async {
+    await _dio.patch(
+      '${ApiConstants.devices}/$deviceId/night-light/leds/$ledNumber/label',
+      data: {'led${ledNumber}_label': label},
     );
   }
 }
