@@ -5,18 +5,19 @@ String formatApiErrorMessage(
   Object error, {
   String fallback = 'Something went wrong. Please try again.',
 }) {
-  if (error is DioException) {
-    // Connection and Timeout issues
-    if (error.type == DioExceptionType.connectionError) {
-      final errorStr = error.toString().toLowerCase();
-      if (errorStr.contains('socketexception') ||
-          errorStr.contains('connection refused') ||
-          errorStr.contains('handshake_exception')) {
-        return 'Unable to connect. The database or server might be offline.';
-      }
-      return 'No internet connection.';
-    }
+  final errorStr = error.toString().toLowerCase();
 
+  // Primary check for connection/server issues to catch them early and avoid exposing URLs
+  if (errorStr.contains('socketexception') ||
+      errorStr.contains('connection refused') ||
+      errorStr.contains('handshake_exception') ||
+      errorStr.contains('is offline') ||
+      errorStr.contains('failed to connect') ||
+      errorStr.contains('ngrok')) {
+    return 'Unable to connect. The database or server might be offline.';
+  }
+
+  if (error is DioException) {
     if (error.type == DioExceptionType.connectionTimeout ||
         error.type == DioExceptionType.receiveTimeout ||
         error.type == DioExceptionType.sendTimeout) {
@@ -58,14 +59,6 @@ String formatApiErrorMessage(
         return detail;
       }
     }
-  }
-
-  // Handle generic SocketException if Dio didn't wrap it or if it's a raw exception
-  final errorStr = error.toString().toLowerCase();
-  if (errorStr.contains('socketexception') ||
-      errorStr.contains('connection refused') ||
-      errorStr.contains('handshake_exception')) {
-    return 'Unable to connect. The database or server might be offline.';
   }
 
   if (errorStr.contains('network_error') || errorStr.contains('no internet')) {
