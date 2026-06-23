@@ -9,8 +9,10 @@ String formatApiErrorMessage(
     // Connection and Timeout issues
     if (error.type == DioExceptionType.connectionError) {
       final errorStr = error.toString().toLowerCase();
-      if (errorStr.contains('socketexception') || errorStr.contains('connection refused')) {
-        return 'Unable to connect to the server.';
+      if (errorStr.contains('socketexception') ||
+          errorStr.contains('connection refused') ||
+          errorStr.contains('handshake_exception')) {
+        return 'Unable to connect. The database or server might be offline.';
       }
       return 'No internet connection.';
     }
@@ -60,8 +62,10 @@ String formatApiErrorMessage(
 
   // Handle generic SocketException if Dio didn't wrap it or if it's a raw exception
   final errorStr = error.toString().toLowerCase();
-  if (errorStr.contains('socketexception') || errorStr.contains('connection refused')) {
-    return 'Unable to connect to the server.';
+  if (errorStr.contains('socketexception') ||
+      errorStr.contains('connection refused') ||
+      errorStr.contains('handshake_exception')) {
+    return 'Unable to connect. The database or server might be offline.';
   }
 
   if (errorStr.contains('network_error') || errorStr.contains('no internet')) {
