@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../../core/api_error.dart';
 import '../../core/theme.dart';
 import '../../services/auth_service.dart';
 import 'login_screen.dart'
@@ -50,19 +51,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
         context.push('/verify-otp', extra: _emailCtrl.text.trim());
       }
     } on DioException catch (e) {
-      final detail = e.response?.data;
-      String msg = 'Registration failed. Please try again.';
-      if (detail is String) {
-        msg = detail;
-      } else if (detail is Map && detail['detail'] != null) {
-        final d = detail['detail'];
-        if (d is List && d.isNotEmpty) {
-          msg = d.map((e) => e['msg'] ?? e.toString()).join('\n');
-        } else {
-          msg = d.toString();
-        }
-      }
-      setState(() => _error = msg);
+      setState(() => _error = formatApiErrorMessage(e));
     } catch (_) {
       setState(() => _error = 'An unexpected error occurred.');
     } finally {

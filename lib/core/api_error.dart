@@ -1,56 +1,72 @@
 import 'package:dio/dio.dart';
 
+/// Formats error objects into user-friendly messages.
 String formatApiErrorMessage(
   Object error, {
   String fallback = 'Something went wrong. Please try again.',
 }) {
   if (error is DioException) {
-    final responseData = error.response?.data;
+    // Connection and Timeout issues
+    if (error.type == DioExceptionType.connectionError) {
+      final errorStr = error.toString().toLowerCase();
+      if (errorStr.contains('socketexception') || errorStr.contains('connection refused')) {
+        return 'Unable to connect to the server.';
+      }
+      return 'No internet connection.';
+    }
 
+    if (error.type == DioExceptionType.connectionTimeout ||
+        error.type == DioExceptionType.receiveTimeout ||
+        error.type == DioExceptionType.sendTimeout) {
+      return 'The request took too long. Please try again.';
+    }
+
+    final statusCode = error.response?.statusCode;
+
+    // Handle specific status codes
+    if (statusCode == 401 || statusCode == 403) {
+      return 'Session expired or access denied. Please log in again.';
+    }
+
+    if (statusCode == 404) {
+      return 'Unable to load data. Please try again.';
+    }
+
+    if (statusCode != null && statusCode >= 500) {
+      return 'Server is currently unavailable.';
+    }
+
+    // Try to extract backend detail if it's a 400-level error (usually validation/logic)
+    final responseData = error.response?.data;
     if (responseData is Map<String, dynamic>) {
       final detail = responseData['detail'] ??
           responseData['message'] ??
           responseData['error'];
+
       if (detail is String && detail.trim().isNotEmpty) {
+        // Avoid technical messages
+        final lowerDetail = detail.toLowerCase();
+        if (lowerDetail.contains('exception') ||
+            lowerDetail.contains('stack') ||
+            lowerDetail.contains('trace') ||
+            lowerDetail.contains('line ') ||
+            lowerDetail.contains('sql')) {
+          return 'Something went wrong. Please try again later.';
+        }
         return detail;
       }
-    } else if (responseData is String && responseData.trim().isNotEmpty) {
-      return responseData;
     }
+  }
 
-    if (error.type == DioExceptionType.connectionError ||
-        error.type == DioExceptionType.connectionTimeout ||
-        error.type == DioExceptionType.receiveTimeout ||
-        error.type == DioExceptionType.sendTimeout) {
-      final details = _extractDioErrorDetails(error);
-      return 'Unable to reach the server (${error.type.name}). $details';
-    }
+  // Handle generic SocketException if Dio didn't wrap it or if it's a raw exception
+  final errorStr = error.toString().toLowerCase();
+  if (errorStr.contains('socketexception') || errorStr.contains('connection refused')) {
+    return 'Unable to connect to the server.';
+  }
 
-    final statusCode = error.response?.statusCode;
-    if (statusCode == 401 || statusCode == 403) {
-      return 'Your session is invalid or this account is not allowed on this device.';
-    }
-    if (statusCode == 404) {
-      return 'The requested information could not be found.';
-    }
-    if (statusCode != null && statusCode >= 500) {
-      return 'The server is currently unavailable. Please try again later.';
-    }
+  if (errorStr.contains('network_error') || errorStr.contains('no internet')) {
+    return 'No internet connection.';
   }
 
   return fallback;
-}
-
-String _extractDioErrorDetails(DioException error) {
-  final message = error.message?.trim();
-  if (message != null && message.isNotEmpty) {
-    return message;
-  }
-
-  final underlying = error.error;
-  if (underlying != null) {
-    return underlying.toString();
-  }
-
-  return 'Please check your connection and try again.';
 }

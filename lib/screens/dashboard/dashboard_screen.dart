@@ -541,7 +541,16 @@ class _ActivityTab extends ConsumerWidget {
                   );
                 },
                 loading: () => const Center(child: CircularProgressIndicator()),
-                error: (err, _) => Center(child: Text('Error: $err')),
+                error: (err, _) => Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(24.0),
+                    child: Text(
+                      formatApiErrorMessage(err),
+                      textAlign: TextAlign.center,
+                      style: GoogleFonts.inter(color: AppColors.textSecondary),
+                    ),
+                  ),
+                ),
               ),
             ),
           ),
@@ -696,7 +705,7 @@ class _ProfileTab extends ConsumerWidget {
           child: CircularProgressIndicator(color: AppColors.primary),
         ),
         error: (err, _) => _ErrorState(
-          message: err.toString(),
+          message: formatApiErrorMessage(err),
           onRetry: () => ref.refresh(currentUserProvider),
         ),
         data: (user) => SingleChildScrollView(

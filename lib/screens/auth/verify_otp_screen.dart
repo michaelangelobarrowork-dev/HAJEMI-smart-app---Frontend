@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pinput/pinput.dart';
+import '../../core/api_error.dart';
 import '../../core/theme.dart';
 import '../../services/auth_service.dart';
 import 'login_screen.dart' show AppLogo;
@@ -83,8 +84,7 @@ class _VerifyOtpScreenState extends ConsumerState<VerifyOtpScreen> {
         context.go('/login');
       }
     } on DioException catch (e) {
-      setState(() =>
-          _error = e.response?.data['detail'] ?? 'Verification failed.');
+      setState(() => _error = formatApiErrorMessage(e));
     } catch (_) {
       setState(() => _error = 'An unexpected error occurred.');
     } finally {
@@ -105,8 +105,7 @@ class _VerifyOtpScreenState extends ConsumerState<VerifyOtpScreen> {
       _pinController.clear();
       _startTimer();
     } on DioException catch (e) {
-      setState(() =>
-          _error = e.response?.data['detail'] ?? 'Failed to resend OTP.');
+      setState(() => _error = formatApiErrorMessage(e));
     } finally {
       if (mounted) setState(() => _resending = false);
     }

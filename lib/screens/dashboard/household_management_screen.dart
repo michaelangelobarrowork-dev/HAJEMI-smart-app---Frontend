@@ -164,7 +164,16 @@ class _HouseholdManagementScreenState extends ConsumerState<HouseholdManagementS
       ),
       body: householdAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (err, _) => Center(child: Text(err.toString())),
+        error: (err, _) => Center(
+          child: Padding(
+            padding: const EdgeInsets.all(24.0),
+            child: Text(
+              formatApiErrorMessage(err),
+              textAlign: TextAlign.center,
+              style: GoogleFonts.inter(color: AppColors.textSecondary),
+            ),
+          ),
+        ),
         data: (household) {
           if (household == null) return const Center(child: Text('No household found'));
 

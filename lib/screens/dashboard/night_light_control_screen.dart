@@ -46,7 +46,7 @@ class _NightLightControlScreenState extends ConsumerState<NightLightControlScree
       await ref.refresh(deviceProvider(widget.deviceId).future);
     } catch (e) {
       setState(() => _localAutoMode = !val);
-      if (mounted) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Failed to toggle auto mode')));
+      if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(formatApiErrorMessage(e))));
     }
   }
 
@@ -71,7 +71,7 @@ class _NightLightControlScreenState extends ConsumerState<NightLightControlScree
         if (ledNumber == 2) _localLed2 = !val;
         if (ledNumber == 3) _localLed3 = !val;
       });
-      if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Failed to toggle LED $ledNumber')));
+      if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(formatApiErrorMessage(e))));
     }
   }
 
@@ -119,7 +119,7 @@ class _NightLightControlScreenState extends ConsumerState<NightLightControlScree
           );
         }
       } catch (e) {
-        if (mounted) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Failed to update label')));
+        if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(formatApiErrorMessage(e))));
       }
     }
   }
