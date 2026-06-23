@@ -1332,9 +1332,9 @@ class _HomeDevicesSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final nightLight = devices.where((d) => d.deviceType == 'Auto Night Light').firstOrNull;
-    final security = devices.where((d) => d.deviceType == 'Home Security').firstOrNull;
-    final thiefSecurity = devices.where((d) => d.deviceType == 'Anti-thief Security').firstOrNull;
+    final nightLight = devices.where((d) => d.deviceType == 'auto_night_light').firstOrNull;
+    final security = devices.where((d) => d.deviceType == 'gate_motion_detector').firstOrNull;
+    final thiefSecurity = devices.where((d) => d.deviceType == 'anti_theft_detector').firstOrNull;
 
     if (nightLight == null && security == null && thiefSecurity == null) {
       return const SizedBox.shrink();
@@ -1484,8 +1484,12 @@ class _DeviceTypeCard extends StatelessWidget {
                 height: 40,
                 child: ElevatedButton(
                   onPressed: online ? () {
-                    if (device.deviceType == 'Auto Night Light') {
+                    if (device.deviceType == 'auto_night_light') {
                       context.push('/device-control/${device.id}');
+                    } else if (device.deviceType == 'gate_motion_detector') {
+                      context.push('/gate-security/${device.id}');
+                    } else if (device.deviceType == 'anti_theft_detector') {
+                      context.push('/anti-theft/${device.id}');
                     }
                   } : null,
                   style: ElevatedButton.styleFrom(
@@ -1848,11 +1852,15 @@ class _DeviceCard extends StatelessWidget {
     final online = device.isOnline;
 
     return InkWell(
-      onTap: () {
-        if (device.deviceType == 'Auto Night Light') {
+      onTap: online ? () {
+        if (device.deviceType == 'auto_night_light') {
           context.push('/device-control/${device.id}');
+        } else if (device.deviceType == 'gate_motion_detector') {
+          context.push('/gate-security/${device.id}');
+        } else if (device.deviceType == 'anti_theft_detector') {
+          context.push('/anti-theft/${device.id}');
         }
-      },
+      } : null,
       borderRadius: BorderRadius.circular(18),
       child: Container(
         decoration: BoxDecoration(

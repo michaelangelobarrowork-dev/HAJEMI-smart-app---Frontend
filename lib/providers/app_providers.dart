@@ -4,6 +4,7 @@ import '../models/device_model.dart';
 import '../models/household_model.dart';
 import '../models/log_model.dart';
 import '../models/user_model.dart';
+import '../models/detection_model.dart';
 import '../services/device_service.dart';
 import '../services/log_service.dart';
 import '../services/user_service.dart';
@@ -14,6 +15,16 @@ final devicesProvider = FutureProvider.autoDispose<List<DeviceModel>>((ref) {
 
 final deviceProvider = FutureProvider.autoDispose.family<DeviceModel, int>((ref, id) {
   return ref.watch(deviceServiceProvider).getDevice(id);
+});
+
+final gateDetectionsProvider = FutureProvider.autoDispose.family<List<DetectionModel>, int>((ref, id) async {
+  final data = await ref.watch(deviceServiceProvider).getGateDetections(id);
+  return data.map((e) => DetectionModel.fromJson(e as Map<String, dynamic>)).toList();
+});
+
+final roomDetectionsProvider = FutureProvider.autoDispose.family<List<DetectionModel>, int>((ref, id) async {
+  final data = await ref.watch(deviceServiceProvider).getRoomDetections(id);
+  return data.map((e) => DetectionModel.fromJson(e as Map<String, dynamic>)).toList();
 });
 
 final currentUserProvider = FutureProvider.autoDispose<UserModel>((ref) {

@@ -88,4 +88,16 @@ class DeviceService {
       data: {'led${ledNumber}_label': label},
     );
   }
+
+  /// Fetch gate motion detections.
+  Future<List<dynamic>> getGateDetections(int deviceId) async {
+    final res = await _dio.get('${ApiConstants.gateDetections}/$deviceId/detections');
+    return res.data as List<dynamic>;
+  }
+
+  /// Fetch anti-theft room detections.
+  Future<List<dynamic>> getRoomDetections(int deviceId) async {
+    final res = await _dio.get('${ApiConstants.roomDetections}/$deviceId/detections');
+    return res.data as List<dynamic>;
+  }
 }

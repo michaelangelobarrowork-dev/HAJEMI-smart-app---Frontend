@@ -8,6 +8,8 @@ import '../screens/dashboard/household_management_screen.dart';
 import '../screens/dashboard/notification_center_screen.dart';
 import '../screens/dashboard/register_device_screen.dart';
 import '../screens/dashboard/night_light_control_screen.dart';
+import '../screens/dashboard/gate_security_screen.dart';
+import '../screens/dashboard/anti_theft_room_screen.dart';
 import '../services/auth_service.dart';
 
 final routerProvider = Provider<GoRouter>((ref) {
@@ -60,6 +62,20 @@ final routerProvider = Provider<GoRouter>((ref) {
         builder: (_, state) {
           final id = int.parse(state.pathParameters['id']!);
           return NightLightControlScreen(deviceId: id);
+        },
+      ),
+      GoRoute(
+        path: '/gate-security/:id',
+        builder: (_, state) {
+          final id = int.parse(state.pathParameters['id']!);
+          return GateSecurityScreen(deviceId: id);
+        },
+      ),
+      GoRoute(
+        path: '/anti-theft/:id',
+        builder: (_, state) {
+          final id = int.parse(state.pathParameters['id']!);
+          return AntiTheftRoomScreen(deviceId: id);
         },
       ),
     ],
